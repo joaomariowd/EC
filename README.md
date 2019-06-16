@@ -6,7 +6,8 @@ First, clone this repository on your web folder.
 
 #### Create a composer.json for PSR-4 autoloading
 **Path:** Project Root
-**File contents:**
+**File contents:** 
+
 {
     "require": {
         "katzgrau/klogger": ">=1.2.1"
