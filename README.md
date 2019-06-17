@@ -1,5 +1,5 @@
 # EC
-Some PHP classes that can be used to have **ORM** (Object-relational mapping), following the ActiveRecord pattern.  
+Some PHP classes that can be used to have **ORM** (Object-relational mapping), inspired by the ActiveRecord pattern.  
 There's other classes for pagination, **User ACL** and much more.
 
 ## Usage
@@ -78,6 +78,17 @@ $config = new Config;
 Logger::init($config);
 Connection::setConn($config);
 ```
+### Logging
+
+To log events, create a folder **~/storage/logs**.
+
+Than, we can use it like this:
+
+```PHP
+$l = Logger::getLogger();
+$l->notice ('Hello World!', ['msg' => 'Ok!']);
+```
+Obs: Web server must have write permissions on logs folder.
 
 ## Model Class  
 
