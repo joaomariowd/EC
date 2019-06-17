@@ -28,6 +28,7 @@ After that, type *composer install* on your terminal, at the Project's root (~) 
 ### Create a database.ini file for database data  
 **Path:** ~/Site/Configs/database.ini  
 **File contents:**  
+```ini
 [development]  
 host = 127.0.0.1  
 charset = utf8mb4  
@@ -45,7 +46,7 @@ password =
 [app]  
 mode = development  
 logLevel = NOTICE;  
-
+```
 ### Create a MySQL DB  
 Fill the Database required info in database.ini file  
 
@@ -80,14 +81,14 @@ Connection::setConn($config);
 
 ## Model Class  
 
-###Conventions
+### Conventions
 1. Records are identified by an **id** field
-2. You can add **created_at** and **updated** fields as *DATETIME* and it will automatically populate Record creation and update times.
+2. You can add **created_at** and **updated** fields as *DATETIME* and they will be automatically populated with record creation and updated times.
 
-### The User class extends Model class    
-Let's start with the **User** class, which inherits functionality from the **Model** class.  
+### User class  
+The *User* class extends the *Model* class, to inherit it's functionality.  
 
-### Create the *users* table  
+#### Create the *users* table  
 **Table name:** users  
 **Fields:**
 ```SQL
@@ -100,14 +101,12 @@ active  TINYINT(4)
 created_at  DATETIME  
 updated_at  DATETIME  
 ```
-
-
 ### Create  
 Add the following code to your index.php file to create new users  
 ```PHP
 $user = new User;  
 $user->nickname = 'John';  
-$user->email = 'john@emai.com';  
+$user->email = 'john@email.com';  
 $user->hash = -1;  
 $user->active = -1;  
 
@@ -129,12 +128,13 @@ $id = 1;
 $user = User::find($id);  
 echo $user->nickname;  
 ```
-Obs: As this finder *throws an exception* if the record was not found, we can do this:  
+Obs: As the finder *throws an exception* if the record was not found, we can do this:  
 ```PHP
 $id = 1;  
 try {  
     $user = User::find(1);  
 } catch (Exception $e) {  
+    //Record not found
     die ($e->getMessage());  
 }  
 
