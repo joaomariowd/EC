@@ -1,6 +1,6 @@
 # EC
-Some PHP classes that can be used to have ORM (Object-relational mapping), follow the ActiveRecord pattern.  
-There's other classes for pagination, User ACL and much more.
+Some PHP classes that can be used to have ORM (Object-relational mapping), following the ActiveRecord pattern.  
+There's other classes for pagination, **User ACL** and much more.
 
 ## Usage
 First, clone this repository on your web folder.
