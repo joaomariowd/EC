@@ -7,9 +7,25 @@ use EC\Model\Connection;
 use EC\Model\Model;
 use EC\Site\Models\Log;
 
-class User extends Model implements iUser{
+/**
+ * User class
+ * Holds user info and functionality for ACL.
+ * 
+ * @package     EC/EC
+ * @author      João Mário Nedeff Menegaz
+ */
+class User extends Model implements iUser {
+    
+    /**
+     * DB table name
+     * @var string
+     */
     protected static $table = 'users';
 
+    /**
+     * Object properties
+     * DB fields on table users
+     */
     protected $data = [
         'id' => NULL,
         'nickname' => NULL,
@@ -21,24 +37,43 @@ class User extends Model implements iUser{
         'updated_at' => NULL
     ];
 
+    /**
+     * Validations array
+     * 'field' => 'Validation|AnotherValidation:parameter|OtherValidation'
+     */
     protected $validations = [
         'nickname' => 'Required|Min:3|Max:15',
         'email' => 'Required|Email|Unique'
     ];
 
+    /**
+     * User's text password
+     */
     protected $password;
 
+    /**
+     * Users roles
+     */
     protected $roles;
     
+    /**
+     * Encrypts text passwords and sets hash to Property / DB Field hash
+     */
     public function set_password(string $password){
         $this->data['hash'] = password_hash($password, PASSWORD_DEFAULT);
         $this->password = $password;
     }
     
+    /**
+     * @return String user password
+     */
     public function get_password () {
         return $this->password;
     }
 
+    /**
+     * Verify if both passwords are equal and greater than 4 chars and set it
+     */
     public function new_password($pass1, $pass2){
         
         if($pass1 == $pass2 AND strlen($pass1) >= 4){
@@ -49,6 +84,9 @@ class User extends Model implements iUser{
         return false;
     }
     
+    /**
+     * To reset password, this function erases hash and sets a UUID Unique code on remember_token.
+     */
     public function password_reset(){
         $sql = "SELECT UUID() AS UUID;";
         $result = Connection::fetchArray($sql, []);
@@ -69,6 +107,12 @@ class User extends Model implements iUser{
         return false;
     }
 
+    /**
+     * Verifies if user is active (active > 0)
+     * Verifies if password match password_verify
+     * Verifies is user is already logged in, must not be in order to authenticate
+     * @return Boolean Authentication successful?
+     */
     public function authenticate(string $password){
         
         if ($this->isActive() AND $this->isLoggedIn() == false AND password_verify($password, $this->hash)) {
@@ -88,7 +132,12 @@ class User extends Model implements iUser{
         return false;
     }
 
-    //Duas horas tempo de sessão PHP, session.gc_maxlifetime 7200 sec
+    /**
+     * Verifies if User is logged in, on users_login_active table
+     * As we set PHP session to 2 hours, this function also checks if session time is greater
+     * than 2hs. If so, allows login.
+     * session.gc_maxlifetime 7200 sec
+     */
     public function isLoggedIn() {
         $sql = "SELECT `active`, IF (TIMEDIFF(NOW(), created_at) <= '02:00:00', 'OK', 'EXPIRED') AS `session` FROM users_login_active WHERE user_id = ?;";
         $active = Connection::fetchArray($sql, [$this->id]);
@@ -102,10 +151,16 @@ class User extends Model implements iUser{
 
     }
 
+    /**
+     * Wether or not User is Active and should use the system or not.
+     */
     public function isActive() {
         return $this->active >= 1;
     }
     
+    /**
+     * Updates user_login_active table and logs off
+     */
     public function logout() {
 
         //Change login status
@@ -124,6 +179,9 @@ class User extends Model implements iUser{
         return true;
     }
 
+    /**
+     * @return Boolean User has permission?
+     */
     public function hasPermission(string $slang){
         $sql = "SELECT count(*) AS `Permission` FROM users u INNER JOIN role_user ru ON u.id = ru.user_id INNER JOIN roles r ON ru.role_id = r.id INNER JOIN permission_role pr ON r.id = pr.role_id INNER JOIN permissions p ON pr.permission_id = p.id WHERE u.id = ? AND p.slang = ?";
 
@@ -136,6 +194,9 @@ class User extends Model implements iUser{
         return true;
     }
 
+    /**
+     * @return Boolean User has Role
+     */
     public function hasRole(string $slang){
         $sql = "SELECT count(r.id) AS `Role` FROM users u INNER JOIN role_user ru ON u.id = ru.user_id INNER JOIN roles r ON r.id = ru.role_id WHERE u.id = ? AND r.slang = ?;";
         $result = Connection::fetchArray($sql, [$this->id, $slang]);
@@ -148,6 +209,9 @@ class User extends Model implements iUser{
         return true;
     }
     
+    /**
+     * Adds a Role to the User, table role_user
+     */
     public function addRole(Role $role){
         if ($this->hasRole($role->slang))
             return true;
@@ -162,6 +226,9 @@ class User extends Model implements iUser{
         return false;
     }
     
+    /**
+     * Search Logs for the Last Active Status
+     */
     public function recoverLastActiveStatus() {
         $sql = "SELECT `description` FROM logs WHERE user_id = ? AND `slang` = 'user-password-reset' ORDER BY created_at DESC LIMIT 1;";
         $las = Connection::fetchArray ($sql, [$this->id]);
@@ -193,6 +260,11 @@ class User extends Model implements iUser{
         return false;
     }
     
+    /**
+     * Find user by remember_token
+     * @param string $remember_token 
+     * @return User
+     */
     public static function findByRememberToken(string $remember_token){
         $sql = "SELECT * FROM `users` WHERE `remember_token` = ?";
 
