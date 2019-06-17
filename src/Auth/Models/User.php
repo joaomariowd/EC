@@ -11,14 +11,14 @@ class User extends Model implements iUser{
     protected static $table = 'users';
 
     protected $data = [
-        'id' => '',
-        'nickname' => '',
-        'email' => '',
-        'hash' => '',
-        'remember_token' => '',
-        'active' => '',
-        'created_at' => '',
-        'updated_at' => ''
+        'id' => NULL,
+        'nickname' => NULL,
+        'email' => NULL,
+        'hash' => NULL,
+        'remember_token' => NULL,
+        'active' => NULL,
+        'created_at' => NULL,
+        'updated_at' => NULL
     ];
 
     protected $validations = [

@@ -7,12 +7,12 @@ class Role extends Model{
     protected static $table = 'roles';
 
     protected $data = [
-        'id' => '',
-        'title' => '',
-        'slang' => '',
-        'description' => '',
-        'created_at' => '',
-        'updated_at' => ''
+        'id' => NULL,
+        'title' => NULL,
+        'slang' => NULL,
+        'description' => NULL,
+        'created_at' => NULL,
+        'updated_at' => NULL
     ];
 
     protected $permissions;

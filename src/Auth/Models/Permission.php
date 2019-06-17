@@ -6,12 +6,12 @@ class Permission extends Model{
     protected static $table = 'permissions';
 
     protected $data = [
-        'id' => '',
-        'title' => '',
-        'slang' => '',
-        'description' => '',
-        'created_at' => '',
-        'updated_at' => ''
+        'id' => NULL,
+        'title' => NULL,
+        'slang' => NULL,
+        'description' => NULL,
+        'created_at' => NULL,
+        'updated_at' => NULL
     ];
 
 }
