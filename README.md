@@ -158,7 +158,7 @@ If there's change in the info supplied, record will be updated and *1* will be e
 If we run this code again, *0* (false) will be echoed.  
 As there's no change, the *update* operation won't be ran in the Database.  
 
-OBS: You can verify the last time a record was updated in the *updated_at* field. This field is updated automatically if registry had changes and was updated.  
+OBS: You can verify the last time a record was updated in the *updated_at* field. This field is updated automatically if record had changes and was updated.  
 
 ### Delete  
 ```PHP
