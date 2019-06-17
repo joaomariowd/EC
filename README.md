@@ -84,7 +84,7 @@ Connection::setConn($config);
 ### Conventions
 1. Records are identified by an **id** field
 2. You can add **created_at** and **updated** fields as *DATETIME* and they will be automatically populated with record creation and updated times.
-
+3. Table names follow the singular/plural rule. For example: for a model called **User**, there's a table called **users**. Each **Model class** has a static variable **$table** that referes to the table name.
 ### User class  
 The *User* class extends the *Model* class, to inherit it's functionality.  
 
